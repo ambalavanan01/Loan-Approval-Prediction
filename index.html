@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Loan Prediction Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e1b4b;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --input-bg: rgba(15, 23, 42, 0.6);
+            --input-border: rgba(255, 255, 255, 0.2);
+            --input-focus: #818cf8;
+            --error: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Abstract Background Elements */
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.5;
+            border-radius: 50%;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(79, 70, 229, 0.4);
+            top: -100px;
+            left: -100px;
+        }
+
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: rgba(236, 72, 153, 0.3);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                transform: translateY(30px) scale(1.1);
+            }
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        select option {
+            background-color: var(--bg-gradient-start);
+            color: var(--text-main);
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        input::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        button.submit-btn {
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button.submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -3px rgba(79, 70, 229, 0.5);
+            background: linear-gradient(135deg, var(--primary-hover), #4f46e5);
+        }
+
+        button.submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .button-loading .spinner {
+            display: inline-block;
+        }
+
+        .button-loading .btn-text {
+            display: none;
+        }
+
+        #result-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: none;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        #result-container.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .result-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="container">
+        <header>
+            <h1>Loan Approval Predictor</h1>
+            <p class="subtitle">AI-powered instant loan assessment</p>
+        </header>
+
+        <form id="predictionForm">
+
+            <!-- Categoricals Input Group -->
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="1.0">Male</option>
+                    <option value="0.0">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="maritalStatus">Marital Status</label>
+                <select id="maritalStatus" required>
+                    <option value="" disabled selected>Select Marital Status</option>
+                    <option value="1.0">Married</option>
+                    <option value="0.0">Single</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="education">Education</label>
+                <select id="education" required>
+                    <option value="" disabled selected>Select Education</option>
+                    <option value="1.0">Graduate</option>
+                    <option value="0.0">Not Graduate</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="selfEmployed">Self Employed</label>
+                <select id="selfEmployed" required>
+                    <option value="" disabled selected>Are you self-employed?</option>
+                    <option value="1.0">Yes</option>
+                    <option value="0.0">No</option>
+                </select>
+            </div>
+
+            <!-- Numeric Input Group -->
+            <div class="form-group">
+                <label for="applicantIncome">Applicant Income (Monthly)</label>
+                <input type="number" id="applicantIncome" step="0.01" placeholder="e.g. 95000" required>
+            </div>
+
+            <div class="form-group">
+                <label for="coapplicantIncome">Co-Applicant Income</label>
+                <input type="number" id="coapplicantIncome" step="0.01" placeholder="e.g. 12000" required>
+            </div>
+
+            <div class="form-group">
+                <label for="loanAmount">Loan Amount (INR in thousands)</label>
+                <input type="number" id="loanAmount" step="0.01" placeholder="e.g. 300" required>
+            </div>
+
+            <div class="form-group">
+                <label for="loanTermYears">Loan Term (Years)</label>
+                <input type="number" id="loanTermYears" step="0.5" placeholder="e.g. 20" required>
+            </div>
+
+            <div class="form-group">
+                <label for="creditHistory">Credit History</label>
+                <select id="creditHistory" required>
+                    <option value="" disabled selected>Select Credit Status</option>
+                    <option value="1.0">Good (1.0)</option>
+                    <option value="0.0">Bad (0.0)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="existingLoans">Existing Loans count</label>
+                <input type="number" id="existingLoans" step="1" placeholder="e.g. 1" required>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-group full-width">
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="btn-text">Predict Loan Approval</span>
+                    <span class="spinner"></span>
+                </button>
+            </div>
+        </form>
+
+        <div id="result-container"></div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const resultContainer = document.getElementById('result-container');
+
+            // Start Loading State
+            submitBtn.classList.add('button-loading');
+            submitBtn.disabled = true;
+            resultContainer.classList.remove('show', 'result-success', 'result-error');
+
+            try {
+                // Collect and convert data to Floats automatically
+                const payload = [
+                    parseFloat(document.getElementById('gender').value),
+                    parseFloat(document.getElementById('maritalStatus').value),
+                    parseFloat(document.getElementById('education').value),
+                    parseFloat(document.getElementById('selfEmployed').value),
+                    parseFloat(document.getElementById('applicantIncome').value),
+                    parseFloat(document.getElementById('coapplicantIncome').value),
+                    parseFloat(document.getElementById('loanAmount').value),
+                    parseFloat(document.getElementById('loanTermYears').value),
+                    parseFloat(document.getElementById('creditHistory').value),
+                    parseFloat(document.getElementById('existingLoans').value)
+                ];
+
+                const apiUrl = 'https://nie7ebw775.execute-api.eu-north-1.amazonaws.com/prod/predict';
+
+                // Construct Request Body
+                // Through testing we found the API expects: {"features": [1.0, 1.0, ...]}
+                const requestBody = { features: payload };
+
+                // API Request
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        // Using text/plain successfully bypasses CORS preflight while still sending JSON data formatting
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Parse the response from the API, which looks like: {"prediction": "Rejected", "probability": -1.57e-05}
+                const responseData = await response.json();
+
+                // End Loading State and Update UI
+                resultContainer.textContent = `Prediction Result: ${responseData.prediction}`;
+
+                if (responseData.prediction && responseData.prediction.toLowerCase() === 'approved') {
+                    resultContainer.classList.add('show', 'result-success');
+                } else if (responseData.prediction && responseData.prediction.toLowerCase() === 'rejected') {
+                    resultContainer.classList.add('show', 'result-error');
+                } else {
+                    resultContainer.classList.add('show');
+                }
+
+            } catch (error) {
+                console.error('Error during prediction fetch:', error);
+                resultContainer.textContent = 'Oops! Something went wrong trying to contact the prediction server. Please make sure the API is active or doesn\'t have CORS restrictions.';
+                resultContainer.classList.add('show', 'result-error');
+            } finally {
+                // Re-enable button
+                submitBtn.classList.remove('button-loading');
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
