@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity History - AI Loan Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .history-container {
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 8rem;
+        }
+
+        .history-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .nav-header {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            right: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .back-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--card-glass);
+            padding: 0.75rem 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+            border-color: var(--primary);
+        }
+
+        .history-table-container {
+            width: 100%;
+            overflow-x: auto;
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            margin-top: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            min-width: 900px;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            text-align: left;
+            padding: 1.25rem 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 1.25rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .sno-cell {
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- Reusing Auth Overlay for consistency -->
+    <div id="auth-overlay" class="auth-overlay">
+        <div class="auth-card">
+            <h1
+                style="font-size: 2.25rem; margin-bottom: 2rem; background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                Portal Login</h1>
+            <form id="authForm" style="grid-template-columns: 1fr;">
+                <div class="form-group">
+                    <label>User Name/Email ID:</label>
+                    <input type="text" id="username" placeholder="Username or Email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="submit-btn" style="width: 100%;">
+                    <span>Authenticate</span>
+                </button>
+            </form>
+            <div id="auth-error"
+                style="color: var(--error); margin-top: 1.5rem; display: none; font-size: 0.95rem; font-weight: 600;">
+                Authentication failed. Access denied.
+            </div>
+        </div>
+    </div>
+
+    <nav class="nav-header">
+        <a href="index.html" class="back-link">← Back to Portal</a>
+        <div class="user-badge" id="userBadge" style="display: none; position: relative; top: 0; right: 0;">
+            <div class="profile-btn" onclick="toggleDropdown()">A</div>
+            <div class="profile-dropdown" id="profileDropdown" style="top: 4.5rem;">
+                <div class="admin-box">
+                    <h4>Account</h4>
+                    <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem;">Ambalavanan</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">User Name: ambalavanan@admin</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">Email ID: ambalavanan275@gmail.com
+                    </div>
+                </div>
+                <button onclick="logout()"
+                    style="background: rgba(239, 68, 68, 0.1); border: 1px solid var(--error); color: var(--error); padding: 1rem; border-radius: 12px; cursor: pointer; font-weight: 700; width: 100%; transition: all 0.3s ease;">
+                    Sign Out Session
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container history-container">
+        <header style="text-align: left; margin-bottom: 2rem;">
+            <h1>Activity History</h1>
+            <p class="subtitle">Complete record of your AI loan assessments</p>
+        </header>
+
+        <div id="history-content" class="history-table-container">
+            <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                <p>Establishing connection to secure database...</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Loan Approval Prediction. Developed by <b>Ambalavanan</b>.
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Dedicated fetch logic for history page
+        async function fetchHistory() {
+            const content = document.getElementById('history-content');
+
+            // Now using the SAME endpoint as prediction, but as a GET request
+            const HISTORY_API_URL = 'https://nie7ebw775.execute-api.eu-north-1.amazonaws.com/prod/predict';
+
+            try {
+                const response = await fetch(HISTORY_API_URL);
+                if (!response.ok) throw new Error('Failed to fetch history');
+
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    content.innerHTML = `
+                        <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
+                            <p>No investment history found yet.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                content.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">S.No</th>
+                                <th>Customer Name</th>
+                                <th>Email ID</th>
+                                <th>Phone Number</th>
+                                <th>Loan Amount</th>
+                                <th>Timestamp</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map((item, index) => `
+                                <tr>
+                                    <td class="sno-cell">${index + 1}</td>
+                                    <td style="font-weight: 500;">${item.CustomerName || 'N/A'}</td>
+                                    <td style="color: var(--text-secondary);">${item.CustomerEmail || 'N/A'}</td>
+                                    <td>${item.CustomerPhone || 'N/A'}</td>
+                                    <td style="font-weight: 700; color: var(--primary);">
+                                        ₹${(parseFloat(item.LoanAmount || 0) * 1000).toLocaleString('en-IN')} Rupees
+                                    </td>
+                                    <td style="white-space: nowrap; font-size: 0.8rem; color: var(--text-secondary);">
+                                        ${new Date(item.Timestamp).toLocaleString()}
+                                    </td>
+                                    <td>
+                                        <div class="status-pill status-${item.Prediction?.toUpperCase()}" style="margin: 0;">
+                                            ${item.Prediction}
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+
+            } catch (error) {
+                console.error(error);
+                content.innerHTML = `
+                    <div style="text-align: center; padding: 4rem; color: var(--error);">
+                        <p>Unable to connect to history database.</p>
+                        <p style="font-size: 0.8rem; margin-top: 1rem; color: var(--text-secondary);">
+                            Make sure you have created the "FetchHistory" Lambda and enabled CORS.
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        // Ensure UI initializes correctly on this page too
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeUI();
+            fetchHistory();
+        });
+    </script>
+</body>
+
+</html>
